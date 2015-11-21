@@ -1,1 +1,4 @@
-# GOOD-EMOTION-3000
+# GOOD-EMOTION-3000 (Hack U Tokai 作品)
+
+顔の表情を演出することのできるビデオチャット.
+WebRTC(peer.js)を利用した.
