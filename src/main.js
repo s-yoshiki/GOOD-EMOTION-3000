@@ -1,6 +1,6 @@
 /***********************
 *
-*   11/08/2015 
+*   11/08/2015
 *  Shinagawa Yoshiki
 *
 *************************/
@@ -48,12 +48,14 @@ sketch.height = canvas2.height;
 sketch.width = canvas2.width;
 var conn;
 var test_c = 0;
+
+/*stream送信connection*/
 var peer = new Peer({
     key: '8bcd5c66-aa38-4336-9454-da690043e1a6',
     debug: 3
 });
 
-/*関数送信用P2P*/
+/*関数+座標送信用connection*/
 var peer2 = new Peer({
     key: '8bcd5c66-aa38-4336-9454-da690043e1a6',
     debug: 3
@@ -61,7 +63,7 @@ var peer2 = new Peer({
 
 peer2.on('open', function(){});
 
-//////about sending function's message
+//////sending message
 peer2.on('connection', connect);
 
 function connect(c) {
@@ -70,16 +72,18 @@ function connect(c) {
         document.getElementById("messages").innerHTML = data;
         try{
             //eval(data);
+            //即時間数への変更
             (Function(data))();
         }catch(e){
             document.getElementById("messages").innerHTML = data;
         }
-        document.getElementById("func-id").value = conn.peer   
+        document.getElementById("func-id").value = conn.peer
     });
     conn.on('close', function(err) {
         alert(conn.peer + ' has left the chat.');
     });
 }
+//connection確立の関数
 $(document).ready(function() {
     // Conect to a peer
     $('#make-call').click(function() {
@@ -88,7 +92,7 @@ $(document).ready(function() {
             connect(c);
         });
         c.on('error', function(err) {
-            //alert(err); 
+            //alert(err);
         });
     });
     /*
@@ -130,7 +134,7 @@ $(function() {
     $('#make-call').click(function() {
         var call = peer.call($('#callto-id').val(), window.localStream);
         step3(call);
-        
+
     });
     $('#end-call').click(function() {
         window.existingCall.close();
@@ -141,7 +145,7 @@ $(function() {
     });
     step1();
 });
-//****************"sent stream"******************//
+//****************"peer serverへ"******************//
 function step1() {
     navigator.getUserMedia({audio: true,video: true},function(stream) {
         $('#my-video').prop('src', URL.createObjectURL(stream));
@@ -171,13 +175,13 @@ function step3(call) {
     });
 }
 
-
+//URLの処理　
 function setUrl() {
     var text = "";
     if(location.href.indexOf("?=") !== -1){
         text=location.href.slice(location.href.length-32,location.href.length);
     }
-    
+
     var videoId = "",funcId = "";
     if (text.length !== 32) {
         text = "";
@@ -206,6 +210,7 @@ document.getElementById("tweet").onclick = function(){
 var global_color = "#FFF";
 var global_color_count = 0;
 
+//カラー選定UI
 document.getElementById("color").onclick = function(){
     global_color_count++;
     global_color = "rgb("+Math.ceil(Math.random()*255)+","+Math.ceil(Math.random()*255)+","+Math.ceil(Math.random()*255)+")";
@@ -230,6 +235,7 @@ document.getElementById("color").onclick = function(){
 };
 
 //*************************************  about video chat  **************************
+//clmtrackrのインスタンス
 var ctrack = new clm.tracker({useWebGL:true});
 ctrack.init(pModel);
 
@@ -267,6 +273,7 @@ document.getElementById("tracking-type").onclick = function(){
     }
 };
 
+//ビデオ(描画)関数
 
 function drawVideo() {
     window.requestAnimationFrame(drawVideo);
@@ -291,7 +298,7 @@ function drawVideo() {
                     var noise = 1;
                     if(Math.random()>0.95){
                         noise = 0;
-                    } 
+                    }
                     dst.data[i] = src.data[i]*noise;
                     dst.data[i + 1] = src.data[i +1]*(1-er[0].value-0.4)*noise;
                     dst.data[i + 2] = src.data[i + 2]*(1-er[0].value-0.4)*noise;
@@ -361,7 +368,7 @@ function drawVideo() {
                 }
             }else if(EmotionProcess(er[0].value,er[1].value,er[2].value,er[3].value)===5){
                 //surprised & funny
-                for (var i = 0; i < src.data.length; i = i + 4) { 
+                for (var i = 0; i < src.data.length; i = i + 4) {
                     dst.data[i] = Math.abs(255-src.data[i])*0;
                     dst.data[i + 1] = Math.abs(255-src.data[i +1]);
                     dst.data[i + 2] = Math.abs(255-src.data[i + 2]);
@@ -405,7 +412,7 @@ function drawVideo() {
                     var noise = 1;
                     if(Math.random()>0.95){
                         noise = 0;
-                    } 
+                    }
                     dst.data[i] = src.data[i]*noise;
                     dst.data[i + 1] = src.data[i +1]*(1-er[0].value-0.4)*noise;
                     dst.data[i + 2] = src.data[i + 2]*(1-er[0].value-0.4)*noise;
@@ -459,7 +466,7 @@ function drawVideo() {
                 }
             }else if(EmotionProcess(TheirFaceEmotion.angry ,TheirFaceEmotion.sad ,TheirFaceEmotion.surprised ,TheirFaceEmotion.funny)===4){
                 //funny
-                for (var i = 0; i < src.data.length; i = i + 4) { 
+                for (var i = 0; i < src.data.length; i = i + 4) {
                     dst.data[i] = src.data[i];
                     dst.data[i + 1] = src.data[i +1];
                     dst.data[i + 2] = src.data[i + 2]*(1-((er[3].value-0.5)*2));
@@ -467,7 +474,7 @@ function drawVideo() {
                 }
             }else if(EmotionProcess(TheirFaceEmotion.angry ,TheirFaceEmotion.sad ,TheirFaceEmotion.surprised ,TheirFaceEmotion.funny)===5){
                 //surprised & funny
-                for (var i = 0; i < src.data.length; i = i + 4) { 
+                for (var i = 0; i < src.data.length; i = i + 4) {
                     dst.data[i] = Math.abs(255-src.data[i]);
                     dst.data[i + 1] = Math.abs(255-src.data[i +1]);
                     dst.data[i + 2] = Math.abs(255-src.data[i + 2]);
@@ -519,7 +526,7 @@ function drawVideo() {
                     var noise = 1;
                     if(Math.random()>0.95){
                         noise = 0;
-                    } 
+                    }
                     dst.data[i] = src.data[i]*noise;
                     dst.data[i + 1] = src.data[i +1]*(1-er[0].value-0.4)*noise;
                     dst.data[i + 2] = src.data[i + 2]*(1-er[0].value-0.4)*noise;
@@ -573,7 +580,7 @@ function drawVideo() {
                 }
             }else if(EmotionProcess(er[0].value,er[1].value,er[2].value,er[3].value)===4){
                 //funny
-                for (var i = 0; i < src.data.length; i = i + 4) { 
+                for (var i = 0; i < src.data.length; i = i + 4) {
                     dst.data[i] = src.data[i];
                     dst.data[i + 1] = src.data[i +1];
                     dst.data[i + 2] = src.data[i + 2]*(1-((er[3].value-0.5)*2));
@@ -581,7 +588,7 @@ function drawVideo() {
                 }
             }else if(EmotionProcess(er[0].value,er[1].value,er[2].value,er[3].value)===5){
                 //surprised & funny
-                for (var i = 0; i < src.data.length; i = i + 4) { 
+                for (var i = 0; i < src.data.length; i = i + 4) {
                     dst.data[i] = Math.abs(255-src.data[i]);
                     dst.data[i + 1] = Math.abs(255-src.data[i +1]);
                     dst.data[i + 2] = Math.abs(255-src.data[i + 2]);
@@ -615,7 +622,7 @@ function drawVideo() {
             }
             context2.putImageData(dst, 0, 0);
         }
-        
+
         src = context.getImageData(0, 0, canvas.width, canvas.height);
         dst = src;
         if(TrackingType === false){
@@ -625,7 +632,7 @@ function drawVideo() {
                     var noise = 1;
                     if(Math.random()>0.95){
                         noise = 0;
-                    } 
+                    }
                     dst.data[i] = src.data[i]*noise;
                     dst.data[i + 1] = src.data[i +1]*(1-er[0].value-0.4)*noise;
                     dst.data[i + 2] = src.data[i + 2]*(1-er[0].value-0.4)*noise;
@@ -679,7 +686,7 @@ function drawVideo() {
                 }
             }else if(EmotionProcess(TheirFaceEmotion.angry ,TheirFaceEmotion.sad ,TheirFaceEmotion.surprised ,TheirFaceEmotion.funny)===4){
                 //funny
-                for (var i = 0; i < src.data.length; i = i + 4) { 
+                for (var i = 0; i < src.data.length; i = i + 4) {
                     dst.data[i] = src.data[i];
                     dst.data[i + 1] = src.data[i +1];
                     dst.data[i + 2] = src.data[i + 2]*(1-((er[3].value-0.5)*2));
@@ -687,7 +694,7 @@ function drawVideo() {
                 }
             }else if(EmotionProcess(TheirFaceEmotion.angry ,TheirFaceEmotion.sad ,TheirFaceEmotion.surprised ,TheirFaceEmotion.funny)===5){
                 //surprised & funny
-                for (var i = 0; i < src.data.length; i = i + 4) { 
+                for (var i = 0; i < src.data.length; i = i + 4) {
                     dst.data[i] = Math.abs(255-src.data[i]);
                     dst.data[i + 1] = Math.abs(255-src.data[i +1]);
                     dst.data[i + 2] = Math.abs(255-src.data[i + 2]);
@@ -724,11 +731,11 @@ function drawVideo() {
     }
 
     //document.getElementById("step3").innerHTML = EmotionProcess(TheirFaceEmotion.angry ,TheirFaceEmotion.sad ,TheirFaceEmotion.surprised ,TheirFaceEmotion.funny);
-    
+
     //face ditection
     if(document.getElementById("checkbox").checked){
         if(canvasChangeFlags===false){
-            if (ctrack.getCurrentPosition()) {    
+            if (ctrack.getCurrentPosition()) {
                 //ctrack.draw(canvas);
                 try{
                     DrawPointCanvas(ctrack.getCurrentPosition(),"o",global_color);
@@ -738,7 +745,7 @@ function drawVideo() {
                 }
             }
         }else{
-            if (ctrack.getCurrentPosition()) {    
+            if (ctrack.getCurrentPosition()) {
                 //ctrack.draw(canvas2);
                 try{
                     DrawPointCanvas2(ctrack.getCurrentPosition(),"o",global_color);
@@ -779,8 +786,8 @@ function drawVideo() {
             //conn.send("drawCheekCanvas2(TheirFacePosition,"+MyFaceParts.cheek.count+","+global_color+","+document.getElementById("textarea").value+");");
         }
     }
-    
-    
+
+
     try{
         conn.send("SendEmotion("+er[0].value+","+er[1].value+","+er[2].value+","+er[3].value+");");
     }catch(e){
@@ -795,9 +802,9 @@ function drawVideo() {
     document.getElementById(1).innerHTML = "sad       : "+er[1].value;
     document.getElementById(2).innerHTML = "surprised : "+er[2].value;
     document.getElementById(3).innerHTML = "funny     : "+er[3].value;
-    
+
     delete src,dst;
-    
+
     if(TrackingType === false){
         SendFacePosition(ctrack.getCurrentPosition());
     }else{
@@ -918,7 +925,7 @@ overlay.addEventListener("mousemove", function(e){
         contextOverlay.fillStyle = "#0F0";
         var width_top = overlay.getBoundingClientRect().left;
         var height_top = overlay.getBoundingClientRect().top;
-        
+
         //var x,y;
         MousePoint.x1 = parseInt(e.clientX - width_top,10)/overlay.width;
         MousePoint.y1 = +parseInt(e.clientY - height_top,10)/overlay.height;
@@ -938,7 +945,7 @@ overlay.addEventListener("mousemove", function(e){
                 console.log(e);
             }
             //document.getElementById("messages").innerHTML = msg;
-        }); 
+        });
         MousePoint.x2 = MousePoint.x1;
         MousePoint.y2 = MousePoint.y1;
     }else{
@@ -977,7 +984,7 @@ function DrawLineOverlay(x1,y1,x2,y2,color,size){
     if(color===undefined){
         color="#0F0";
     };
-    
+
     x1 = overlay.width*x1;
     y1 = overlay.height*y1;
     x2 = overlay.width*x2;
@@ -1067,7 +1074,7 @@ function DrawLineCanvas(x1,y1,x2,y2,color,size){
     if(color===undefined){
         color="#0F0";
     };
-    
+
     x1 = canvas.width*x1;
     y1 = canvas.height*y1;
     x2 = canvas.width*x2;
@@ -1189,6 +1196,7 @@ document.getElementById("mouth").onclick = function(){
     conn.send("TheirFaceParts.mouth.count ="+MyFaceParts.mouth.count);
 };
 
+//頬への落書き
 function drawCheekCanvas(array,n,color,text){
     if(n>3){
         n=n%5;
@@ -1205,7 +1213,7 @@ function drawCheekCanvas(array,n,color,text){
     x2 = array[40][0]/video.width*canvas.width+Math.abs(array[40][0]/video.width*canvas.width-array[13][0]/video.width*canvas.width)/2-20;
     y2 = array[40][1]/video.width*canvas.width;
     if(n===0){
-        
+
     }else if(n===1){
         context.fillText("！",x1,y1);
         context.fillText("！",x2,y2);
@@ -1224,6 +1232,8 @@ function drawCheekCanvas(array,n,color,text){
     }
 }
 
+
+//額への描画
 function drawForeheadCanvas(array,n,color,text){
     if(n>3){
         n=n%5;
@@ -1240,7 +1250,7 @@ function drawForeheadCanvas(array,n,color,text){
     //x2 = array[40][0]/video.width*canvas.width+Math.abs(array[40][0]/video.width*canvas.width-array[13][0]/video.width*canvas.width)/2-20;
     //y2 = array[40][1]/video.width*canvas.width;
     if(n===0){
-        
+
     }else if(n===1){
         context.fillText("！",x1,y1);
         //context.fillText("！",x2,y2);
@@ -1258,6 +1268,8 @@ function drawForeheadCanvas(array,n,color,text){
         //context.fillText(text,x2,y2);
     }
 }
+
+//目への描画
 function drawEyeCanvas(array,n,color,text){
     if(n>3){
         n=n%5;
@@ -1274,7 +1286,7 @@ function drawEyeCanvas(array,n,color,text){
     x2 = array[32][0]/video.width*canvas.width-10;
     y2 = array[32][1]/video.width*canvas.width;
     if(n===0){
-        
+
     }else if(n===1){
         context.fillText("＄",x1,y1);
         context.fillText("＄",x2,y2);
@@ -1311,7 +1323,7 @@ function drawCheekCanvas2(array,n,color,text){
     x2 = array[40][0]/video.width*canvas.width+Math.abs(array[40][0]/video.width*canvas.width-array[13][0]/video.width*canvas.width)/2-20;
     y2 = array[40][1]/video.width*canvas.width;
     if(n===0){
-        
+
     }else if(n===1){
         context2.fillText("！",x1,y1);
         context2.fillText("！",x2,y2);
@@ -1346,7 +1358,7 @@ function drawForeheadCanvas2(array,n,color,text){
     //x2 = array[40][0]/video.width*canvas.width+Math.abs(array[40][0]/video.width*canvas.width-array[13][0]/video.width*canvas.width)/2-20;
     //y2 = array[40][1]/video.width*canvas.width;
     if(n===0){
-        
+
     }else if(n===1){
         context2.fillText("！",x1,y1);
         //context.fillText("！",x2,y2);
@@ -1380,7 +1392,7 @@ function drawEyeCanvas2(array,n,color,text){
     x2 = array[32][0]/video.width*canvas.width-10;
     y2 = array[32][1]/video.width*canvas.width;
     if(n===0){
-        
+
     }else if(n===1){
         context2.fillText("＄",x1,y1);
         context2.fillText("＄",x2,y2);
