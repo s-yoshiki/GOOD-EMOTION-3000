@@ -793,11 +793,11 @@ function drawVideo() {
     }catch(e){
         console.log(e);
     }
-    /*
-    document.getElementById(0).innerHTML = "angry     : "+TheirFaceEmotion.angry;
-    document.getElementById(1).innerHTML = "sad       : "+TheirFaceEmotion.sad;
-    document.getElementById(2).innerHTML = "surprised : "+TheirFaceEmotion.surprised;
-    document.getElementById(3).innerHTML = "funny     : "+TheirFaceEmotion.funny;*/
+    // /*
+    // document.getElementById(0).innerHTML = "angry     : "+TheirFaceEmotion.angry;
+    // document.getElementById(1).innerHTML = "sad       : "+TheirFaceEmotion.sad;
+    // document.getElementById(2).innerHTML = "surprised : "+TheirFaceEmotion.surprised;
+    // document.getElementById(3).innerHTML = "funny     : "+TheirFaceEmotion.funny;*/
     document.getElementById(0).innerHTML = "angry     : "+er[0].value;
     document.getElementById(1).innerHTML = "sad       : "+er[1].value;
     document.getElementById(2).innerHTML = "surprised : "+er[2].value;
